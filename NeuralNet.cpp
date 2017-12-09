@@ -3,13 +3,16 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <semaphore.h>
+#include <pthread.h>
 
 using namespace std;
 
 NeuralNet::NeuralNet(int numOfLayers, vector<int>& layersNeuronNum){
-  layers = vector< vector<Node*> > (numOfLayers);
   addInputNodes(layersNeuronNum[0]);
   setWeightsAndBiases(numOfLayers, layersNeuronNum);
+  defineThreads(numOfLayers, layersNeuronNum);
+  createSemaphores(numOfLayers);
 }
 
 void NeuralNet::addInputNodes(int numOfInputs){
@@ -30,5 +33,21 @@ void NeuralNet::setWeightsAndBiases(int numOfLayers, vector<int>& layersNeuronNu
       biasesFile >> bias;
       layers[i].push_back(new Node(weights, bias));
     }
+  }
+}
+
+void NeuralNet::defineThreads(int numOfLayers, vector<int>& layersNeuronNum){
+  for(int i = 0; i < numOfLayers; i++){
+    vector<pthread_t*> temp;
+    for(int j = 0; j < layersNeuronNum[i]; j++)
+      temp.push_back(new pthread_t);
+    nodeThreads.push_back(temp);
+  }
+}
+
+void NeuralNet::createSemaphores(int numOfLayers){
+  for(int i = 1; i < numOfLayers; i++){
+    readyForNextLayer.push_back(new sem_t);
+    nextLayerRead.push_back(new sem_t);
   }
 }
