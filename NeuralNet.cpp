@@ -16,14 +16,17 @@ NeuralNet::NeuralNet(int numOfLayers, vector<int>& layersNeuronNum){
 }
 
 void NeuralNet::addInputNodes(int numOfInputs){
+  vector<Node*> temp;
   for(int i = 0; i < numOfInputs; i++)
-    layers[0].push_back(new Node());
+    temp.push_back(new Node());
+  layers.push_back(temp);
 }
 
 void NeuralNet::setWeightsAndBiases(int numOfLayers, vector<int>& layersNeuronNum){
   ifstream weightsFile("inputs/weights.txt");
   ifstream biasesFile("inputs/biases.txt");
   for(int i = 1; i < numOfLayers; i++){
+    vector<Node*> temp_;
     for(int j = 0; j < layersNeuronNum[i]; j++){
       vector<float> weights;  float temp, bias;
       for(int k = 0; k < layersNeuronNum[i-1]; k++){
@@ -31,8 +34,9 @@ void NeuralNet::setWeightsAndBiases(int numOfLayers, vector<int>& layersNeuronNu
         weights.push_back(temp);
       }
       biasesFile >> bias;
-      layers[i].push_back(new Node(weights, bias));
+      temp_.push_back(new Node(weights, bias));
     }
+    layers.push_back(temp_);
   }
 }
 
