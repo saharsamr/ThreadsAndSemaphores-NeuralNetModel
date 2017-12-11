@@ -52,6 +52,10 @@ void NeuralNet::defineThreads(int numOfLayers, vector<int>& layersNeuronNum){
 void NeuralNet::createSemaphores(int numOfLayers){
   for(int i = 1; i < numOfLayers; i++){
     readyForNextLayer.push_back(new sem_t);
+    if(sem_init(readyForNextLayer[i-1], 0, 0) != 0)
+      cerr << "semaphore creation failed.\n";
     nextLayerRead.push_back(new sem_t);
+    if(sem_init(nextLayerRead[i-1], 0, 0) != 0)
+      cerr << "semaphore creation failed.\n";
   }
 }
