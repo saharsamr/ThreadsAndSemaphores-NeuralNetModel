@@ -10,10 +10,10 @@
 using namespace std;
 
 int main(int argc, char const *argv[]){
-  int numOfLayers;
+  int numOfLayers, numOfSamples;
   vector<int> layersNeuronNum;
-  getNetFeatures(numOfLayers, layersNeuronNum);
-  NeuralNet* net = new NeuralNet(numOfLayers, layersNeuronNum);
+  getNetFeatures(numOfLayers, layersNeuronNum, numOfSamples);
+  NeuralNet* net = new NeuralNet(numOfLayers, layersNeuronNum, numOfSamples);
   // net->readInputs("InputFile.txt");
   return 0;
 }
